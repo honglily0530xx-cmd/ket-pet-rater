@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PET Writing 报告</title>
+  <style>
+    :root{
+      --bg:#f3f4f6;
+      --paper:#fff;
+      --ink:#111827;
+      --muted:#6b7280;
+      --line:#d1d5db;
+      --err:#c62828;
+      --up:#b71c1c;
+      --accent:#0f4c81;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;padding:12px;background:var(--bg);color:var(--ink);font:13.5px/1.5 "Helvetica Neue",Arial,sans-serif}
+    .page{width:210mm;min-height:297mm;margin:0 auto 12px;background:var(--paper);padding:12mm;border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+    .title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+    h1{margin:0;font-size:21px;color:var(--accent)}
+    .meta-right{font-size:12px;text-align:right;white-space:pre-line}
+    .subline{margin:4px 0 8px;font-size:12.5px;color:#374151}
+    .overview{margin:0 0 10px;font-size:12.5px;color:#1f2937}
+    h2{font-size:16px;margin:10px 0 6px;border-bottom:1px solid var(--line);padding-bottom:3px}
+    h3{font-size:13.5px;margin:6px 0}
+    .tip{margin:6px 0 8px;color:#374151;font-size:12px}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+    .text{border:1px solid var(--line);border-radius:8px;padding:10px;white-space:pre-wrap;background:#fff}
+    table{width:100%;border-collapse:collapse;background:#fff}
+    th,td{border:1px solid var(--line);padding:6px;vertical-align:top}
+    th{background:#f9fafb;text-align:left}
+    .err{color:var(--err);text-decoration:underline 2px solid var(--err);font-weight:700}
+    .eid{display:inline-block;min-width:18px;margin-left:3px;padding:0 5px;border-radius:999px;background:#fee2e2;color:var(--err);font-size:11px;font-weight:700;text-align:center}
+    .up{color:var(--up);font-weight:700}
+    .muted{color:var(--muted);font-size:12px}
+    .model{min-height:92mm}
+    .avoid-break{page-break-inside:avoid;break-inside:avoid}
+    .print-page-break{page-break-after:always}
+    @media print{
+      body{background:#fff;padding:0}
+      .page{box-shadow:none !important;border-radius:0 !important;margin:0;width:auto;min-height:auto;padding:12mm 12mm !important}
+      .two-col{display:grid !important;grid-template-columns:1fr 1fr !important;gap:10mm !important}
+      .print-page-break{page-break-after:always}
+      .avoid-break{page-break-inside:avoid;break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <section class="page">
+    <div class="title-row avoid-break">
+      <h1>{{exam_level}} Writing 报告 — {{student_name}} · {{topic_title}}</h1>
+      <div class="meta-right">学生：{{student_name}}<br/>字数：约 {{word_count_est}} 词</div>
+    </div>
+    <p class="subline">任务类型：{{genre}} · 主题：{{topic_title}}　　　　　　　　　　　　　　建议写作时长：20–25 分钟</p>
+    <p class="overview">Writing Part 2 考查：观点表达 · 结构 · 语言准确性　整体水平：{{overall_band}}</p>
+
+    <h2>一、学生原文 & 批注（图片式修改样式）</h2>
+    <p class="tip">左侧是带红色下划线标注问题的原文，右侧是对应简要批注，版式接近“左文右批注”的阅读体验。</p>
+    <div class="two-col">
+      <article class="avoid-break">
+        <h3>左侧：带标注的学生原文（红色下划线 = 需要修改）</h3>
+        <div class="text">{{marked_student_html}}</div>
+      </article>
+      <article class="avoid-break">
+        <h3>右侧：对应批注</h3>
+        <table>
+          <thead>
+            <tr><th>#</th><th>批注</th></tr>
+          </thead>
+          <tbody>
+            {{error_rows_compact_html}}
+          </tbody>
+        </table>
+        <p class="muted">说明：详细“原句-错误类型-修正结果”可在课堂讲评时口头展开。</p>
+      </article>
+    </div>
+  </section>
+
+  <div class="print-page-break"></div>
+
+  <section class="page">
+    <h2>二、优化范文（基于原文，高分 Band 5）</h2>
+    <p class="tip">范文尽量保留学生原有结构和观点，只在语言和表达上升级。红色部分表示改写或强化。</p>
+    <div class="text model avoid-break">{{model_text_html}}</div>
+    <p class="muted">字数约 {{model_word_count_est}} 词，处于 {{exam_level}} {{genre}} 的合理区间。</p>
+
+    <h2>三、修改亮点说明（从中档 → 高分）</h2>
+    <table class="avoid-break">
+      <tbody>
+        <tr><th>1. 内容 Content</th><td>{{upgrade_content}}</td></tr>
+        <tr><th>2. 语言组织 Organisation</th><td>{{upgrade_org}}</td></tr>
+        <tr><th>3. 词汇语法 Language</th><td>{{upgrade_lang}}</td></tr>
+        <tr><th>4. 沟通效果 Communicative Achievement</th><td>{{upgrade_ca}}</td></tr>
+        <tr><th>5. 综合评价（优化后）</th><td>{{upgrade_overall}}</td></tr>
+      </tbody>
+    </table>
+
+    <h2>四、官方标准评分（四维评分 + 量表换算）</h2>
+    <h3>1. 四个维度评分</h3>
+    <table class="avoid-break">
+      <thead>
+        <tr><th>维度</th><th>分数（1-5）</th><th>评语要点</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Content（内容）</td><td>{{score_content}} / 5</td><td>{{reason_content}}</td></tr>
+        <tr><td>Communicative Achievement（沟通成就）</td><td>{{score_ca}} / 5</td><td>{{reason_ca}}</td></tr>
+        <tr><td>Organisation（组织结构）</td><td>{{score_org}} / 5</td><td>{{reason_org}}</td></tr>
+        <tr><td>Language（语言）</td><td>{{score_lang}} / 5</td><td>{{reason_lang}}</td></tr>
+      </tbody>
+    </table>
+
+    <h3>2. 总分与量表换算</h3>
+    <table class="avoid-break">
+      <tbody>
+        <tr><th>原始总分（四项合计）</th><td>{{total_20}} / 20</td></tr>
+        <tr><th>量表换算方法</th><td>锚点：17→160（B2），12→140（B1），8→120（A2），5→102。按分段线性推算。</td></tr>
+        <tr><th>剑桥英语量表分数（Cambridge English Scale）</th><td>约 {{ces_score}} 分</td></tr>
+        <tr><th>对应 CEFR 等级</th><td>{{cefr_level}}</td></tr>
+        <tr><th>一句整体评价</th><td>{{final_comment}}</td></tr>
+      </tbody>
+    </table>
+  </section>
+</body>
+</html>

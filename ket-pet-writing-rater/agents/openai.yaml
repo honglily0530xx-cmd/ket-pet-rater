@@ -1,0 +1,4 @@
+interface:
+  display_name: "KET/PET Writing Rater"
+  short_description: "Generate printable KET/PET writing reports"
+  default_prompt: "Use $ket-pet-writing-rater to grade this composition and output one A4-printable HTML report with error indexing, model rewrite, and final score mapping."

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KET/PET 写作评分与看板</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <header class="brand">
+        <h1>KP Writing Lab</h1>
+        <p>登录后可评分、存档与看板分析</p>
+      </header>
+
+      <section class="panel" id="authPanel">
+        <h2>账号登录</h2>
+        <div id="authLoggedOut">
+          <label>用户名
+            <input id="authUsername" type="text" placeholder="teacher01" />
+          </label>
+          <label>密码
+            <input id="authPassword" type="password" placeholder="至少6位" />
+          </label>
+          <label>显示名（注册可选）
+            <input id="authDisplayName" type="text" placeholder="陈老师" />
+          </label>
+          <div class="grid2">
+            <button id="loginBtn" class="primary">登录</button>
+            <button id="registerBtn">注册</button>
+          </div>
+        </div>
+        <div id="authLoggedIn" class="hidden">
+          <p class="muted">当前用户：<strong id="currentUserText">-</strong></p>
+          <button id="logoutBtn">退出登录</button>
+        </div>
+      </section>
+
+      <div class="tabs">
+        <button id="tabWriter" class="tab active">写作评分</button>
+        <button id="tabDashboard" class="tab">学生看板</button>
+        <button id="tabArchive" class="tab">评分存档</button>
+      </div>
+
+      <section id="writerPanel" class="panel-stack">
+        <section class="panel">
+          <h2>输入作文</h2>
+          <label>学生姓名
+            <input id="studentName" type="text" placeholder="例如 Rick" />
+          </label>
+
+          <div class="grid2">
+            <label>考试等级
+              <select id="examLevel">
+                <option value="PET">PET</option>
+                <option value="KET">KET</option>
+              </select>
+            </label>
+            <label>体裁
+              <select id="genre">
+                <option value="article">Article</option>
+                <option value="email">Email</option>
+                <option value="story">Story</option>
+                <option value="review">Review</option>
+                <option value="message">Message</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="grid2">
+            <label>目标档
+              <select id="targetLevel">
+                <option value="PET_Band5">PET Band 5</option>
+                <option value="B2">B2</option>
+              </select>
+            </label>
+            <label>布局模式
+              <select id="layoutMode">
+                <option value="B">B (左标错右解释)</option>
+                <option value="A">A (左原文右标错)</option>
+              </select>
+            </label>
+          </div>
+
+          <label>作文题目 / 指令
+            <textarea id="promptText" rows="5" placeholder="粘贴题目原文"></textarea>
+          </label>
+
+          <label>学生原文
+            <textarea id="studentText" rows="12" placeholder="粘贴学生作文"></textarea>
+          </label>
+
+          <div class="actions">
+            <button id="generateBtn" class="primary">生成评分报告并存档</button>
+            <button id="downloadBtn" disabled>下载 HTML</button>
+            <button id="openBtn" disabled>新窗口打开</button>
+          </div>
+        </section>
+      </section>
+
+      <section id="dashboardPanel" class="panel-stack hidden">
+        <section class="panel">
+          <h2>批量导入历史报告</h2>
+          <label>学生姓名文件夹（归档分组）
+            <input id="studentFolder" type="text" placeholder="例如 Rick / ClassA-Rick" />
+          </label>
+          <label>报告目录路径（本机部署推荐）
+            <input id="folderPath" type="text" placeholder="例如 /Users/you/Desktop/PET写作评分" />
+          </label>
+          <label>或拖拽/选择PDF文件
+            <input id="pdfFiles" type="file" accept=".pdf" multiple />
+          </label>
+          <button id="importBtn" class="primary">导入报告</button>
+          <pre id="importResult" class="small-pre">尚未导入</pre>
+        </section>
+
+        <section class="panel">
+          <h2>筛选</h2>
+          <label>学生姓名关键字
+            <input id="filterName" type="text" placeholder="Rick" />
+          </label>
+          <label>题目关键字
+            <input id="filterTopic" type="text" placeholder="Computer Games" />
+          </label>
+          <label>学生文件夹关键字
+            <input id="filterFolder" type="text" placeholder="Rick" />
+          </label>
+          <div class="grid2">
+            <label>最低总分
+              <input id="filterMin" type="number" min="0" max="20" placeholder="0" />
+            </label>
+            <label>最高总分
+              <input id="filterMax" type="number" min="0" max="20" placeholder="20" />
+            </label>
+          </div>
+          <label class="inline-check"><input id="filterRisk" type="checkbox" /> 仅看风险记录</label>
+          <div class="grid2">
+            <button id="refreshDashboardBtn">刷新看板</button>
+            <button id="clearAllRecordsBtn">清空全部学生记录</button>
+          </div>
+          <a id="exportCsvLink" class="button-link" href="/api/export/csv" target="_blank">导出 CSV</a>
+        </section>
+      </section>
+
+      <section id="archivePanel" class="panel-stack hidden">
+        <section class="panel">
+          <h2>存档操作</h2>
+          <button id="refreshArchiveBtn">刷新存档分析</button>
+        </section>
+      </section>
+    </aside>
+
+    <main class="workspace">
+      <div class="toolbar"><span id="status">请先登录</span></div>
+
+      <iframe id="preview" title="report preview" class="hidden"></iframe>
+
+      <section id="dashboardView" class="dashboard hidden">
+        <div class="summary-grid">
+          <article class="summary-card"><h3>记录总数</h3><p id="sumRecords">0</p></article>
+          <article class="summary-card"><h3>班级均分(/20)</h3><p id="sumAvgTotal">0</p></article>
+          <article class="summary-card"><h3>班级均值(CES)</h3><p id="sumAvgCes">0</p></article>
+          <article class="summary-card warning"><h3>风险人数</h3><p id="sumRisk">0</p></article>
+        </div>
+        <section class="dash-card"><h3>分数分布</h3><div id="distribution" class="distribution"></div></section>
+        <section class="dash-card"><h3>学生文件夹</h3><div id="folderList" class="list"></div></section>
+        <section class="dash-card"><h3>风险名单</h3><div id="riskList" class="list"></div></section>
+        <section class="dash-card"><h3>学生卡片</h3><div id="studentCards" class="cards"></div></section>
+      </section>
+
+      <section id="archiveView" class="dashboard hidden">
+        <div class="summary-grid">
+          <article class="summary-card"><h3>存档总数</h3><p id="arcTotal">0</p></article>
+          <article class="summary-card"><h3>平均总分(/20)</h3><p id="arcAvgTotal">0</p></article>
+          <article class="summary-card"><h3>平均CES</h3><p id="arcAvgCes">0</p></article>
+          <article class="summary-card"><h3>最近记录</h3><p id="arcRecent">-</p></article>
+        </div>
+        <section class="dash-card">
+          <h3>评分存档列表</h3>
+          <div id="archiveList" class="cards"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div id="contentModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-head">
+        <strong id="contentModalTitle">上传文件内容</strong>
+        <button id="closeContentModal">关闭</button>
+      </div>
+      <pre id="contentModalBody" class="small-pre"></pre>
+    </div>
+  </div>
+
+  <script src="/config.js"></script>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
