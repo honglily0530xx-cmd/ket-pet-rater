@@ -4,10 +4,22 @@ KET/PET 写作评分、反馈报告生成与学生成长看板。
 
 KP Writing Lab is a lightweight local web app for English teachers who want to grade Cambridge KET/PET writing, generate printable feedback reports, archive results, and review class-level progress from historical PDF reports.
 
+## Core Pain Point
+
+Teachers do not only need an AI comment. They need a **standardized writing assessment report** that can be sent to students, printed as PDF, archived, and compared over time.
+
+Input a writing task and a student response. KP Writing Lab turns them into a structured report with marked errors, explanations, model rewrite, scoring, and archive-ready metadata.
+
+View an anonymized output example:
+
+- [Standardized PET writing report example](reports/PET-Writing-Report-Student-A-Computer-Games.html)
+- [中文：标准化报告输出说明](docs/标准化报告输出示例.md)
+
 ## 中文入口
 
 - [中文使用指南](docs/中文使用指南.md)
 - [Skill 输入到报告的变化](docs/中文使用指南.md#使用-skill-后的变化)
+- [标准化报告输出示例](docs/标准化报告输出示例.md)
 - [中文推广文案](docs/中文推广文案.md)
 - [隐私与安全说明](SECURITY.md)
 
