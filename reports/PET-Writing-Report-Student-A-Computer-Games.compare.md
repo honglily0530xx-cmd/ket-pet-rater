@@ -1,7 +1,7 @@
 # 模板对照确认（Computer Games）
 
-- 参考文件：`/Users/hongcaimei/Desktop/PET写作评分/Think2-1/Rick/PET Writing 报告 — Rick · Computer Games.pdf`
-- 生成文件：`/Users/hongcaimei/Documents/New project/reports/PET-Writing-Report-Rick-Computer-Games.html`
+- 参考文件：`anonymized-source/PET-Writing-Report-Student-A-Computer-Games.pdf`
+- 生成文件：`reports/PET-Writing-Report-Student-A-Computer-Games.html`
 
 ## 已对齐项
 

@@ -1,85 +1,129 @@
-# KET/PET 写作评分 + 学生测评看板（含登录与存档）
+# KP Writing Lab
 
-本项目支持：
-- 登录后进行单篇写作评分
-- 评分结果自动存档
-- 批量上传历史 PDF 报告并做班级分析看板
+KET/PET 写作评分、反馈报告生成与学生成长看板。
 
-## 启动
+KP Writing Lab is a lightweight local web app for English teachers who want to grade Cambridge KET/PET writing, generate printable feedback reports, archive results, and review class-level progress from historical PDF reports.
+
+## Highlights
+
+- **Single writing assessment**: paste a student response and generate a structured HTML feedback report.
+- **Cambridge-style dimensions**: organize comments around content, organisation, communicative achievement, and language.
+- **Teacher dashboard**: import historical PDF reports and review class averages, score distribution, risk records, and student histories.
+- **Archive workflow**: save generated reports automatically after login.
+- **Local-first storage**: data is stored in SQLite on your own machine.
+- **Graceful demo mode**: without an API key, the app still runs and returns a local preview report.
+
+## Who This Is For
+
+- English teachers preparing KET/PET learners
+- Tutors who need repeatable writing feedback templates
+- Small classes tracking writing progress over time
+- Teachers experimenting with AI-assisted marking while keeping records local
+
+## Quick Start
 
 ```bash
-cd "/Users/hongcaimei/Documents/New project"
+git clone https://github.com/honglily0530xx-cmd/ket-pet-rater.git
+cd ket-pet-rater
 npm start
 ```
 
-访问：<http://127.0.0.1:3000>
+Open:
 
-## 第一次使用
-
-1. 在页面左侧“账号登录”模块注册账号（用户名+密码）
-2. 注册后点击登录
-3. 登录成功后可使用“写作评分 / 学生看板 / 评分存档”三个 Tab
-
-## 模型配置（可选）
-
-```bash
-export ANTHROPIC_AUTH_TOKEN="..."
-export ANTHROPIC_BASE_URL="https://api.minimaxi.com/anthropic"
-export ANTHROPIC_MODEL="MiniMax-M2.5"
+```text
+http://127.0.0.1:3000
 ```
 
-未配置时，单篇评分返回降级预览 HTML。
+Then register a local teacher account in the left sidebar.
 
-## 历史报告上传（学生看板）
+## Optional AI Configuration
 
-在“学生看板”Tab：
+The app can call OpenAI-compatible or Anthropic-compatible APIs. If no model key is configured, it runs in local fallback mode.
 
-- 可设置“学生姓名文件夹（归档分组）”，导入报告时会写入该分组
-- 方式A：填目录路径并导入（推荐本机部署）
-- 方式B：直接选择多个 PDF 文件导入
+OpenAI:
 
-导入后可查看：
-- 班级均分（/20）
-- CES 均值
-- 分数分布
-- 风险名单（总分<12 或 Language<=2）
-- 学生卡片（展开看历史记录）
-- 可按“学生文件夹”聚合查看与筛选
+```bash
+export OPENAI_API_KEY="your-api-key"
+export OPENAI_MODEL="gpt-4.1-mini"
+npm start
+```
 
-支持导出：
-- 班级 CSV
-- 记录行导出单人 HTML
-- 记录行可直接“查看PDF/下载PDF”（原版式不变）
-- 记录行点击“查看”可查看上传文件解析内容
-- 记录行删除已上传文档（不可恢复）
-- 一键清空当前账号全部学生记录（用于重建分组）
+Anthropic-compatible endpoint:
 
-## 评分存档分析
+```bash
+export ANTHROPIC_AUTH_TOKEN="your-api-key"
+export ANTHROPIC_BASE_URL="https://api.example.com/anthropic"
+export ANTHROPIC_MODEL="claude-3-5-sonnet-latest"
+npm start
+```
 
-在“评分存档”Tab：
-- 自动统计存档总数/平均总分/平均CES
-- 展示历史评分记录
-- 点击“打开”可加载旧报告预览
+## Main Workflow
 
-## API 概览
+1. Log in or register a local account.
+2. Paste the writing task and student response.
+3. Choose KET or PET, genre, target band, and layout mode.
+4. Generate a feedback report.
+5. Download or open the HTML report.
+6. Review saved reports in the archive tab.
+7. Import historical PDF reports into the student dashboard.
 
-认证：
+## Dashboard Features
+
+- Class average score out of 20
+- Average Cambridge English Scale estimate
+- Score distribution
+- Risk list for low total score or weak language score
+- Student folders and individual history
+- CSV export
+- Original uploaded PDF viewing and download
+
+## Project Structure
+
+```text
+.
+├── public/                  # Browser UI
+├── services/                # Auth, SQLite dashboard, PDF import/export
+├── prompts/                 # System prompt for report generation
+├── reports/                 # Anonymized report examples
+├── ket-pet-writing-rater/   # Codex skill assets and prompt references
+├── data/                    # Local SQLite runtime files, ignored by Git
+└── server.js                # Node.js HTTP server
+```
+
+## Privacy Notes
+
+This project is designed for local teacher workflows, but writing records can still contain sensitive student data.
+
+- Do not commit real student names, essays, or generated reports.
+- Keep local SQLite files out of Git.
+- Use anonymized examples such as `Student A`.
+- Review uploaded PDFs before sharing the repository publicly.
+
+See [SECURITY.md](SECURITY.md) for practical publishing checks.
+
+## API Overview
+
+Authentication:
+
 - `POST /api/auth/register`
 - `POST /api/auth/login`
 - `POST /api/auth/logout`
 - `GET /api/auth/me`
 
-评分：
-- `POST /api/generate-report`（需登录，自动存档）
+Writing assessment:
 
-看板导入与查询：
+- `POST /api/generate-report`
+
+Dashboard:
+
 - `POST /api/import-reports`
 - `GET /api/dashboard/summary`
 - `GET /api/dashboard/students`
 - `GET /api/dashboard/folders`
 - `GET /api/dashboard/student/:name/records`
 
-导出：
+Exports and records:
+
 - `GET /api/export/csv`
 - `GET /api/export/report-html/:recordId`
 - `GET /api/report-record/:recordId/content`
@@ -87,21 +131,21 @@ export ANTHROPIC_MODEL="MiniMax-M2.5"
 - `DELETE /api/report-record/:recordId`
 - `DELETE /api/report-records`
 
-存档：
+Archive:
+
 - `GET /api/archive/summary`
 - `GET /api/archive/reports`
 - `GET /api/archive/report/:id`
 
-## 数据存储
+## Roadmap Ideas
 
-SQLite 文件：`/Users/hongcaimei/Documents/New project/data/dashboard.sqlite`
+- Add hosted demo deployment notes
+- Add screenshot gallery
+- Add rubric presets for KET, PET, FCE, and school writing
+- Add anonymized sample dataset
+- Add teacher-facing export templates
 
-主要表：
-- `users`
-- `sessions`
-- `generated_reports`
-- `report_records`
-- `import_batches`
-- `import_failures`
+## License
 
-说明：数据按用户隔离（登录用户仅看自己的导入与存档）。
+MIT
+

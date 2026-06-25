@@ -2,5 +2,15 @@ node_modules/
 .DS_Store
 *.sqlite
 data/*.sqlite
+data/*.sqlite-shm
+data/*.sqlite-wal
 .vercel
 .env
+*.log
+
+# Keep real student material local unless anonymized.
+private_records/
+uploads/
+
+# Generated sample exports
+reports/*.generated.pdf
