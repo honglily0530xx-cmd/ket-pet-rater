@@ -7,6 +7,7 @@ KP Writing Lab is a lightweight local web app for English teachers who want to g
 ## 中文入口
 
 - [中文使用指南](docs/中文使用指南.md)
+- [Skill 输入到报告的变化](docs/中文使用指南.md#使用-skill-后的变化)
 - [中文推广文案](docs/中文推广文案.md)
 - [隐私与安全说明](SECURITY.md)
 
