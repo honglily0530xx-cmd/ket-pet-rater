@@ -29,7 +29,8 @@
     .model{min-height:92mm}
     .avoid-break{page-break-inside:avoid;break-inside:avoid}
     .print-page-break{page-break-after:always}
-    @media print{body{background:#fff;padding:0}.page{box-shadow:none !important;border-radius:0 !important;margin:0;width:auto;min-height:auto;padding:12mm 12mm !important}.two-col{display:grid !important;grid-template-columns:1fr 1fr !important;gap:10mm !important}.print-page-break{page-break-after:always}.avoid-break{page-break-inside:avoid;break-inside:avoid}}
+    @page{size:A4;margin:0}
+    @media print{body{background:#fff;padding:0}.page{box-shadow:none !important;border-radius:0 !important;margin:0;width:auto;min-height:auto;padding:12mm 12mm !important}.two-col{display:grid !important;grid-template-columns:1fr 1fr !important;gap:10mm !important}.print-page-break{page-break-after:always}.avoid-break{page-break-inside:avoid;break-inside:avoid}.two-col .avoid-break{page-break-inside:auto;break-inside:auto}}
   </style>
 </head>
 <body>
